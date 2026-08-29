@@ -1,0 +1,81 @@
+[
+    {
+        "index": 0,
+        "timestamp": "2026-07-24 07:39:34.903253",
+        "case_id": "GENESIS",
+        "evidence_hash": "0",
+        "previous_hash": "0",
+        "hash": "6ee5acbbbfa44d57af80b3d5b2ddd8e5bd6112f124086dd2db72b662aeed7f54"
+    },
+    {
+        "index": 1,
+        "timestamp": "2026-07-24 07:39:34.904796",
+        "case_id": "CASE-2026-001",
+        "evidence_hash": "123456789abcdef",
+        "previous_hash": "6ee5acbbbfa44d57af80b3d5b2ddd8e5bd6112f124086dd2db72b662aeed7f54",
+        "hash": "9ff83f01a03bd9ad42de322da78689db94726693d4a9f0637b6c847c4af570f3"
+    },
+    {
+        "index": 2,
+        "timestamp": "2026-07-24 13:55:13.665338",
+        "case_id": "CASE-2026-001",
+        "evidence_id": "PG-EV-0001",
+        "evidence_hash": "123456789abcdef",
+        "previous_hash": "9ff83f01a03bd9ad42de322da78689db94726693d4a9f0637b6c847c4af570f3",
+        "hash": "341e9b53e9569dc2390e3fc14ccaaf49be527dde554970fd05826d462a2187ef"
+    },
+    {
+        "index": 3,
+        "timestamp": "2026-07-24 14:11:00.555968",
+        "case_id": "CASE-2026-0002",
+        "evidence_id": "6a60e51768acc56f963a951f",
+        "evidence_hash": "89410e7348e9de11328977cd352ce5ffde2631d441f475fffcdbde55335c9c5e",
+        "previous_hash": "341e9b53e9569dc2390e3fc14ccaaf49be527dde554970fd05826d462a2187ef",
+        "hash": "17e5c17935d4428a3b1b063fab9c43375f246a17e51d3e105479c15dafc6eb18"
+    },
+    {
+        "index": 4,
+        "timestamp": "2026-07-24 14:49:57.160399",
+        "case_id": "CASE-2026-0003",
+        "evidence_id": "6a637817d10fd69595401f9d",
+        "evidence_hash": "7e1f9913ef1f9c7d3b32a3df32e159d98000b2fd0d07da8da4ffa3c3122e3de6",
+        "previous_hash": "17e5c17935d4428a3b1b063fab9c43375f246a17e51d3e105479c15dafc6eb18",
+        "hash": "0dc5d1f12af59f048d6ce49888ed3e6dd6ca645fbc8f1b603795a78473eebab5"
+    },
+    {
+        "index": 5,
+        "timestamp": "2026-07-25 05:54:07.823509",
+        "case_id": "CASE-2026-0004",
+        "evidence_id": "6a644a38e8683fff10bee553",
+        "evidence_hash": "c35adb5a9b10ceedc1ccf04d183d0501fd94f28ca9a06a641dc194366c96a5e3",
+        "previous_hash": "0dc5d1f12af59f048d6ce49888ed3e6dd6ca645fbc8f1b603795a78473eebab5",
+        "hash": "7927f3e48e521f405a8adfb5a00bb66fe6791e277c426172a0a291548285e51b"
+    },
+    {
+        "index": 6,
+        "timestamp": "2026-07-25 07:12:29.934830",
+        "case_id": "CASE-2026-0005",
+        "evidence_id": "PG-EV-2026-00001",
+        "evidence_hash": "1268ef23353dee5b63fa6a3a4f0125837cd674ae6a1794762d998e6676338133",
+        "previous_hash": "7927f3e48e521f405a8adfb5a00bb66fe6791e277c426172a0a291548285e51b",
+        "hash": "69a8982b36aafad1ee30bd0c503128e1c33f6add008661250618216643367978"
+    },
+    {
+        "index": 7,
+        "timestamp": "2026-07-26 06:03:13.467689",
+        "case_id": "CASE-2026-0007",
+        "evidence_id": "PG-EV-2026-00002",
+        "evidence_hash": "2e74b496ed4c07d16e3995f7a11bbb4189d64068b903a24b9d4ac22dd3f77737",
+        "previous_hash": "69a8982b36aafad1ee30bd0c503128e1c33f6add008661250618216643367978",
+        "hash": "aa4dcc4c898b8739461512c20242e0f56ee0dfb15474c71432d9b7bac6e40f6a"
+    },
+    {
+        "index": 8,
+        "timestamp": "2026-07-26 07:10:04.521806",
+        "case_id": "CASE-2026-0008",
+        "evidence_id": "PG-EV-2026-00006",
+        "evidence_hash": "63cd3ffee88f433e3683d4d616873c814aa3c2f491bf058e0bacb4acfa8b20ac",
+        "previous_hash": "aa4dcc4c898b8739461512c20242e0f56ee0dfb15474c71432d9b7bac6e40f6a",
+        "hash": "c2d701290de0d1344faf2254ba356c1ff8dc88c685371c855dcbd5d134dedf7d"
+    }
+]

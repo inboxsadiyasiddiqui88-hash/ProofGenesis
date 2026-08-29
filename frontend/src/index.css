@@ -1,0 +1,24 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:#F8FAFC;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+ul{
+  list-style:none;
+}

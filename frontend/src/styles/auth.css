@@ -1,0 +1,43 @@
+.auth-page{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#F8FAFC;
+
+}
+
+.auth-card{
+
+    width:430px;
+
+    background:white;
+
+    padding:45px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+
+}
+
+.auth-card h1{
+
+    margin-bottom:8px;
+
+    color:#0F172A;
+
+}
+
+.subtitle{
+
+    color:#64748B;
+
+    margin-bottom:35px;
+
+}

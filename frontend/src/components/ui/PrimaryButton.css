@@ -1,0 +1,35 @@
+.primary-button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563EB;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.primary-button:hover{
+
+    background:#1D4ED8;
+
+}
+
+.primary-button:disabled{
+
+    background:#94A3B8;
+
+    cursor:not-allowed;
+
+}
