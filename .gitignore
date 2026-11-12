@@ -1,0 +1,53 @@
+# Python virtual environments
+venv/
+env/
+.venv/
+**/venv/
+**/env/
+**/.venv/
+
+# Environment variables and secrets
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# IDE files
+.vscode/
+
+# Temporary files
+*.log
+.DS_Store
+
+
+# Uploaded evidence and generated files
+backend/evidence_storage/*
+backend/uploads/*
+backend/verification_uploads/*
+uploads/*
+
+# Keep empty folder structure
+!backend/evidence_storage/.gitkeep
+!backend/uploads/.gitkeep
+!backend/verification_uploads/.gitkeep
+!uploads/.gitkeep
+
+
+# Evidence and uploaded test files
+backend/evidence_storage/*
+backend/uploads/*
+backend/verification_uploads/*
+uploads/*
+
+# Keep folder structure
+!backend/evidence_storage/.gitkeep
+!backend/uploads/.gitkeep
+!backend/verification_uploads/.gitkeep
+!uploads/.gitkeep
