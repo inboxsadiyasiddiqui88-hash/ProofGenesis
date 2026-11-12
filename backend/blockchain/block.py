@@ -1,6 +1,6 @@
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class Block:
@@ -16,7 +16,7 @@ class Block:
 
         self.index = index
 
-        self.timestamp = str(datetime.utcnow())
+        self.timestamp = datetime.now(timezone.utc).isoformat()
 
         self.case_id = case_id
 

@@ -1,5 +1,6 @@
 import json
 import os
+import hashlib
 
 from blockchain.block import Block
 
@@ -98,3 +99,79 @@ class Blockchain:
         self.save_chain()
 
         return new_block.__dict__
+
+    # -----------------------------
+    # Validate Blockchain
+    # -----------------------------
+    def is_chain_valid(self):
+
+        for i in range(1, len(self.chain)):
+
+            current_block = self.chain[i]
+
+            previous_block = self.chain[i - 1]
+
+            # -----------------------------
+            # Check previous hash connection
+            # -----------------------------
+            if current_block.get("previous_hash") != previous_block.get("hash"):
+
+                return False
+
+            # -----------------------------
+            # Check required fields
+            # -----------------------------
+            required_fields = [
+                "index",
+                "timestamp",
+                "case_id",
+                "evidence_hash",
+                "previous_hash",
+                "hash"
+            ]
+
+            for field in required_fields:
+
+                if field not in current_block:
+
+                    return False
+
+            # -----------------------------
+            # Recalculate hash
+            # -----------------------------
+            block_data = {
+
+                "index": current_block["index"],
+
+                "timestamp": current_block["timestamp"],
+
+                "case_id": current_block["case_id"],
+
+                "evidence_hash": current_block["evidence_hash"],
+
+                "previous_hash": current_block["previous_hash"]
+            }
+
+            # New blocks contain evidence_id.
+            # Old blocks may not contain it.
+            if "evidence_id" in current_block:
+
+                block_data["evidence_id"] = current_block["evidence_id"]
+
+            block_string = json.dumps(
+                block_data,
+                sort_keys=True
+            )
+
+            calculated_hash = hashlib.sha256(
+                block_string.encode()
+            ).hexdigest()
+
+            # -----------------------------
+            # Check current block hash
+            # -----------------------------
+            if current_block["hash"] != calculated_hash:
+
+                return False
+
+        return True

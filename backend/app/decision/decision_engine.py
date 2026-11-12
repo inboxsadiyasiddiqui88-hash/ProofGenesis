@@ -4,10 +4,11 @@ import numpy as np
 def calculate_authenticity(
     metadata,
     rule_analysis,
-    deep_features
+    deep_features=None
 ):
     """
-    Calculates an explainable authenticity score.
+    Calculates an explainable authenticity score
+    for supported evidence types.
     """
 
     score = 100
@@ -26,35 +27,78 @@ def calculate_authenticity(
         reasons.append("Unknown file type.")
 
     # --------------------------
-    # Rule-based analysis
+    # Image-specific analysis
     # --------------------------
 
-    score -= (100 - rule_analysis["authenticity_score"])
+    if rule_analysis.get("authenticity_score") is not None:
 
-    reasons.extend(rule_analysis["analysis"])
-
-    # --------------------------
-    # Deep feature statistics
-    # --------------------------
-
-    feature_mean = np.mean(deep_features)
-    feature_std = np.std(deep_features)
-
-    if feature_std < 0.5:
-        score -= 10
-        reasons.append(
-            "Low feature diversity detected."
+        score -= (
+            100 - rule_analysis["authenticity_score"]
         )
 
-    if feature_mean < 0.20:
-        score -= 10
-        reasons.append(
-            "Visual features appear unusual."
+        reasons.extend(
+            rule_analysis.get("analysis", [])
         )
 
-    score = max(score, 0)
+        # --------------------------
+        # Deep feature analysis
+        # --------------------------
+
+        if deep_features is not None:
+
+            feature_mean = np.mean(deep_features)
+            feature_std = np.std(deep_features)
+
+            if feature_std < 0.5:
+                score -= 10
+                reasons.append(
+                    "Low feature diversity detected."
+                )
+
+            if feature_mean < 0.20:
+                score -= 10
+                reasons.append(
+                    "Visual features appear unusual."
+                )
+
+    # --------------------------
+    # PDF / Video / Audio analysis
+    # --------------------------
+
+    else:
+
+        suspicious_findings = rule_analysis.get(
+            "suspicious_findings",
+            []
+        )
+
+        # Each detected forensic indicator
+        # reduces the authenticity score.
+        score -= len(suspicious_findings) * 10
+
+        reasons.extend(suspicious_findings)
+
+    # --------------------------
+    # Keep score between 0 and 100
+    # --------------------------
+
+    score = max(0, min(score, 100))
+
+    # --------------------------
+    # Risk level
+    # --------------------------
+
+    if score >= 90:
+        risk_level = "Low"
+
+    elif score >= 70:
+        risk_level = "Medium"
+
+    else:
+        risk_level = "High"
 
     return {
         "score": round(score, 2),
+        "risk_level": risk_level,
         "reasons": reasons
     }

@@ -1,5 +1,6 @@
 import os
 
+from fastapi import HTTPException
 from app.analyzers.image_analyzer import analyze_image
 from app.analyzers.pdf_analyzer import analyze_pdf
 from app.analyzers.video_analyzer import analyze_video
@@ -12,7 +13,13 @@ def analyze_file(file_path):
 
     if extension in [".jpg", ".jpeg", ".png"]:
 
-        return "image", analyze_image(file_path)
+        try:
+            return "image", analyze_image(file_path)
+        except Exception:
+            raise HTTPException(
+              status_code=400,
+              detail="The uploaded file is not a valid image."
+    )
 
     elif extension == ".pdf":
 
@@ -22,10 +29,13 @@ def analyze_file(file_path):
 
         return "video", analyze_video(file_path)
 
-    elif extension in [".mp3", ".wav", ".aac"]:
+    elif extension in [".mp3", ".wav", ".aac", ".ogg", ".opus", ".m4a"]:
 
         return "audio", analyze_audio(file_path)
 
     else:
 
-        raise Exception("Unsupported file type.")
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported file type."
+)

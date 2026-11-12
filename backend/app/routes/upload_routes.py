@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 import os
 import shutil
+import uuid
 from datetime import datetime
 
 from app.utils.hash_utils import generate_sha256
@@ -28,9 +29,21 @@ from app.utils.evidence_generator import generate_evidence_id
 
 
 router = APIRouter(tags=["Evidence"])
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 
 
-UPLOAD_FOLDER = "uploads"
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+UPLOAD_FOLDER = os.path.join(
+    BASE_DIR,
+    "uploads"
+)
 
 os.makedirs(
     UPLOAD_FOLDER,
@@ -46,15 +59,62 @@ async def upload_file(
     current_user=Depends(verify_token)
 ):
 
+        # -----------------------------------------
+    # Check Case Ownership
+    # -----------------------------------------
+
+    existing_case = cases_collection.find_one(
+        {
+            "case_id": case_id,
+            "created_by": current_user["user_id"]
+        }
+    )
+
+    if not existing_case:
+        raise HTTPException(
+            status_code=404,
+            detail="Case not found"
+        )
+
+        # -----------------------------------------
+    # File size limit
+    # -----------------------------------------
+
+    file_size = 0
+
+    while True:
+        chunk = await file.read(1024 * 1024)
+
+        if not chunk:
+            break
+
+        file_size += len(chunk)
+
+        if file_size > MAX_FILE_SIZE:
+            raise HTTPException(
+                status_code=413,
+                detail="File size exceeds the 50 MB limit."
+            )
+
+    await file.seek(0)
+
 
     # ===============================
     # Save uploaded file
     # ===============================
 
+  # Generate a short, safe filename for storage
+    file_extension = os.path.splitext(
+      file.filename
+)[1]
+    stored_filename = (
+        str(uuid.uuid4()) +
+        file_extension
+)
     file_path = os.path.join(
         UPLOAD_FOLDER,
-        file.filename
-    )
+        stored_filename
+)
 
 
     with open(file_path, "wb") as buffer:
@@ -103,55 +163,22 @@ async def upload_file(
 
     if file_category == "image":
 
+     deep_features = extract_features(
+        file_path
+    )
 
-        deep_features = extract_features(
-            file_path
-        )
-
-
-        decision = calculate_authenticity(
-
-            metadata,
-
-            analysis,
-
-            deep_features
-
-        )
-
+     decision = calculate_authenticity(
+        metadata,
+        analysis,
+        deep_features
+    )
 
     else:
 
-
-        decision = {
-
-
-            "status": "Metadata Analysis Complete",
-
-
-            "risk_level":
-
-                "Medium"
-
-                if analysis.get(
-                    "suspicious_findings"
-                )
-
-                else "Low",
-
-
-            "reasons":
-
-                analysis.get(
-
-                    "suspicious_findings",
-
-                    []
-
-                )
-
-        }
-
+     decision = calculate_authenticity(
+        metadata,
+        analysis
+    )
 
 
     # ===============================
@@ -186,32 +213,6 @@ async def upload_file(
 
 
     # ===============================
-    # Check Case Exists
-    # ===============================
-
-    existing_case = cases_collection.find_one(
-
-        {
-            "case_id": case_id
-        }
-
-    )
-
-
-    if not existing_case:
-
-
-        raise HTTPException(
-
-            status_code=404,
-
-            detail="Case not found"
-
-        )
-
-
-
-    # ===============================
     # Generate Evidence ID
     # ===============================
 
@@ -239,7 +240,7 @@ async def upload_file(
         "original_filename": file.filename,
 
 
-        "stored_filename": None,
+        "stored_filename": stored_filename,
 
 
         "filepath": file_path,
@@ -333,3 +334,74 @@ async def upload_file(
     "summary": user_summary
 
 }
+
+
+
+@router.get("/my-evidence")
+def get_my_evidence(
+    current_user=Depends(verify_token)
+):
+
+    owner_id = current_user["user_id"]
+
+    evidence_list = list(
+        evidence_collection.find(
+            {"owner_id": owner_id},
+            {
+                "_id": 0,
+                "evidence_id": 1,
+                "case_id": 1,
+                "original_filename": 1,
+                "uploaded_at": 1,
+                "status": 1,
+                "blockchain_status": 1,
+                "user_summary": 1
+            }
+        ).sort(
+            "uploaded_at",
+            -1
+        )
+    )
+
+    return {
+        "evidence": evidence_list
+    }
+
+@router.get("/evidence/{evidence_id}")
+def get_evidence_details(
+    evidence_id: str,
+    current_user=Depends(verify_token)
+):
+
+    owner_id = current_user["user_id"]
+
+    evidence = evidence_collection.find_one(
+        {
+            "evidence_id": evidence_id,
+            "owner_id": owner_id
+        },
+        {
+            "_id": 0,
+            "evidence_id": 1,
+            "case_id": 1,
+            "original_filename": 1,
+            "file_type": 1,
+            "file_size": 1,
+            "sha256": 1,
+            "uploaded_at": 1,
+            "status": 1,
+            "verification_status": 1,
+            "blockchain_status": 1,
+            "blockchain_tx": 1,
+            "user_summary": 1
+        }
+    )
+
+    if not evidence:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Evidence not found"
+        )
+
+    return evidence

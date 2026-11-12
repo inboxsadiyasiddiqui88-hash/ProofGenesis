@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.auth.auth import (
-    verify_token,
-    require_investigator_or_admin
-)
+from app.auth.auth import verify_token
+from app.auth.roles import investigator_required
 
 from app.database.mongodb import (
     evidence_collection,
@@ -19,8 +17,8 @@ def forensic_report(
     current_user=Depends(verify_token)
 ):
 
-    # Allow only Investigator/Admin
-    require_investigator_or_admin(current_user)
+    # Allow only Investigator
+    investigator_required(current_user)
 
     evidence = evidence_collection.find_one(
         {"evidence_id": evidence_id}

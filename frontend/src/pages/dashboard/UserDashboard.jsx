@@ -1,100 +1,162 @@
-import DashboardLayout from "../../components/layout/DashboardLayout";
+import { useEffect, useState } from "react";
 
+import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatCard from "../../components/ui/StatCard";
 
+import api from "../../services/api";
+
 import {
-
-FaFolderOpen,
-
-FaFileAlt,
-
-FaCube,
-
-FaClock
-
+    FaFolderOpen,
+    FaFileAlt,
+    FaCube,
+    FaClock
 } from "react-icons/fa";
 
-function UserDashboard(){
 
-return(
+function UserDashboard() {
 
-<DashboardLayout>
+    const [dashboardData, setDashboardData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-<h1>
 
-Dashboard
+    useEffect(() => {
 
-</h1>
+        const fetchDashboardData = async () => {
 
-<div
+            try {
 
-style={{
+                const token = localStorage.getItem("token");
 
-display:"grid",
+                const response = await api.get(
+                    "/dashboard/user",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
 
-gridTemplateColumns:"repeat(4,1fr)",
+                console.log(
+                    "User Dashboard Data:",
+                    response.data
+                );
 
-gap:"20px",
+                setDashboardData(response.data);
 
-marginTop:"30px"
+            } catch (error) {
 
-}}
+                console.error(
+                    "Dashboard Error:",
+                    error
+                );
 
->
+                setError(
+                    error.response?.data?.detail ||
+                    "Unable to load dashboard data."
+                );
 
-<StatCard
+            } finally {
 
-title="Cases"
+                setLoading(false);
 
-value="12"
+            }
 
-icon={<FaFolderOpen/>}
+        };
 
-color="#2563EB"
+        fetchDashboardData();
 
-/>
+    }, []);
 
-<StatCard
 
-title="Evidence"
+    if (loading) {
 
-value="38"
+        return (
 
-icon={<FaFileAlt/>}
+            <DashboardLayout>
 
-color="#0EA5E9"
+                <h2>Loading dashboard...</h2>
 
-/>
+            </DashboardLayout>
 
-<StatCard
+        );
 
-title="Registered"
+    }
 
-value="20"
 
-icon={<FaCube/>}
+    if (error) {
 
-color="#22C55E"
+        return (
 
-/>
+            <DashboardLayout>
 
-<StatCard
+                <h2>Unable to load dashboard</h2>
 
-title="Pending"
+                <p>{error}</p>
 
-value="18"
+            </DashboardLayout>
 
-icon={<FaClock/>}
+        );
 
-color="#F59E0B"
+    }
 
-/>
 
-</div>
+    return (
 
-</DashboardLayout>
+        <DashboardLayout>
 
-);
+            <h1>Dashboard</h1>
+
+            <div
+                style={{
+
+                    display: "grid",
+
+                    gridTemplateColumns: "repeat(4, 1fr)",
+
+                    gap: "20px",
+
+                    marginTop: "30px"
+
+                }}
+            >
+
+                <StatCard
+                    title="Cases"
+                    value={dashboardData?.total_cases ?? 0}
+                    icon={<FaFolderOpen />}
+                    color="#2563EB"
+                />
+
+
+                <StatCard
+                    title="Evidence"
+                    value={dashboardData?.total_evidence ?? 0}
+                    icon={<FaFileAlt />}
+                    color="#0EA5E9"
+                />
+
+
+                <StatCard
+                    title="Registered"
+                    value={dashboardData?.registered_evidence ?? 0}
+                    icon={<FaCube />}
+                    color="#22C55E"
+                />
+
+
+                <StatCard
+                    title="Pending"
+                    value={dashboardData?.pending_decision ?? 0}
+                    icon={<FaClock />}
+                    color="#F59E0B"
+                />
+
+            </div>
+
+        </DashboardLayout>
+
+    );
 
 }
 

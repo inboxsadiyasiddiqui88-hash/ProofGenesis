@@ -1,32 +1,27 @@
 import Sidebar from "../components/layout/Sidebar";
 import Navbar from "../components/layout/Navbar";
 
-import "../styles/dashboard.css";
+import "../styles/layout.css";
 
 function UserLayout({ children }) {
 
     return (
-
-        <div className="dashboard-container">
+        <div className="dashboard-layout">
 
             <Sidebar />
 
-            <div className="dashboard-content">
+            <div className="main-content">
 
                 <Navbar />
 
-                <div className="dashboard-page">
-
+                <div className="page-content">
                     {children}
-
                 </div>
 
             </div>
 
         </div>
-
     );
-
 }
 
 export default UserLayout;

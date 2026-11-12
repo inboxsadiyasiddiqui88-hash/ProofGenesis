@@ -51,3 +51,13 @@ uploads/*
 !backend/uploads/.gitkeep
 !backend/verification_uploads/.gitkeep
 !uploads/.gitkeep
+
+
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+venv/
+**/venv/
+.env
+**/.env

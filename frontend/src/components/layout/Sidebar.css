@@ -88,6 +88,14 @@
 
 }
 
+.sidebar nav a.active{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
 .logout-btn{
 
     border:none;

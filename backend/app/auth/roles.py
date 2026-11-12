@@ -1,17 +1,18 @@
 from fastapi import Depends, HTTPException
-
 from app.auth.auth import verify_token
 
+
+# --------------------------------------------------
+# INVESTIGATOR-ONLY ACCESS
+# --------------------------------------------------
 
 def investigator_required(
     current_user=Depends(verify_token)
 ):
-
-    if current_user["role"] not in ["investigator", "admin"]:
-
+    if current_user["role"] != "investigator":
         raise HTTPException(
             status_code=403,
-            detail="Access denied. Investigator or Admin privileges required."
+            detail="Investigator access required."
         )
 
     return current_user

@@ -8,73 +8,113 @@ import {
     FaShieldAlt
 } from "react-icons/fa";
 
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+
 import "./Sidebar.css";
 
 function Sidebar() {
 
-    return (
+    const navigate = useNavigate();
+    const { logout } = useAuth();
 
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    };
+
+    return (
         <aside className="sidebar">
 
+            {/* BRAND */}
             <div>
 
                 <div className="logo-container">
 
-                    <FaShieldAlt className="logo-icon"/>
+                    <div className="logo-icon-wrapper">
+                        <FaShieldAlt className="logo-icon" />
+                    </div>
 
                     <div>
-
                         <h2>ProofGenesis</h2>
-
                         <p>Digital Evidence Platform</p>
-
                     </div>
 
                 </div>
 
+                {/* NAVIGATION */}
                 <nav>
 
-                    <a href="#">
-                        <FaHome/>
-                        Dashboard
-                    </a>
+                    <NavLink
+                        to="/dashboard"
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <FaHome />
+                        <span>Dashboard</span>
+                    </NavLink>
 
-                    <a href="#">
-                        <FaFolder/>
-                        My Cases
-                    </a>
+                    <NavLink
+                        to="/cases"
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <FaFolder />
+                        <span>My Cases</span>
+                    </NavLink>
 
-                    <a href="#">
-                        <FaFolderOpen/>
-                        My Evidence
-                    </a>
+                    <NavLink
+                        to="/evidence"
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <FaFolderOpen />
+                        <span>My Evidence</span>
+                    </NavLink>
 
-                    <a href="#">
-                        <FaFileAlt/>
-                        AI Reports
-                    </a>
+                    <NavLink
+                        to="/reports"
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <FaFileAlt />
+                        <span>AI Reports</span>
+                    </NavLink>
 
-                    <a href="#">
-                        <FaUser/>
-                        Profile
-                    </a>
+                    <NavLink
+                        to="/profile"
+                        className={({ isActive }) =>
+                            isActive ? "menu-item active" : "menu-item"
+                        }
+                    >
+                        <FaUser />
+                        <span>Profile</span>
+                    </NavLink>
 
                 </nav>
 
             </div>
 
-            <button className="logout-btn">
+            {/* LOGOUT */}
+            <div className="sidebar-bottom">
 
-                <FaSignOutAlt/>
+                <button
+                    className="logout-btn"
+                    onClick={handleLogout}
+                    type="button"
+                >
+                    <FaSignOutAlt />
+                    <span>Logout</span>
+                </button>
 
-                Logout
-
-            </button>
+            </div>
 
         </aside>
-
     );
-
 }
 
 export default Sidebar;
